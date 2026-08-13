@@ -1,0 +1,20 @@
+# Dados
+dados/
+*.csv
+*.zip
+*.rar
+*.7z
+*.parquet
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Arquivos temporários
+*.tmp
+*.log
