@@ -1,133 +1,20 @@
-# Tratamento dos Microdados do Censo Escolar 2024
-
-Script em Python para leitura, filtragem e organização dos microdados do **Censo Escolar 2024**, com geração de um arquivo Excel contendo as informações de interesse.
+# Tratamento dos Microdados do Censo Escolar
 
 ## Objetivo
 
-O projeto tem como objetivo facilitar o tratamento dos microdados do Censo Escolar, permitindo selecionar:
+Este repositório tem como objetivo realizar a **leitura e o tratamento dos microdados do Censo Escolar**, inicialmente referentes aos anos de **2024 e 2025**.
 
-* uma unidade da federação;
-* um município;
-* determinadas dependências administrativas;
-* um conjunto específico de variáveis.
+Após o tratamento, os dados serão utilizados para gerar arquivos estruturados que servirão de entrada para a **carga do Painel de Controle - Educação do TCE-ES**.
 
-Atualmente, o código está em **fase de desenvolvimento e testes**, utilizando como município de referência **Divino de São Lourenço (ES)**.
+## Fluxo
 
-## Fonte dos dados
+O processo previsto para o projeto é:
 
-Os dados utilizados são os **Microdados do Censo Escolar 2024**, disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP).
-
-O arquivo utilizado pelo script é:
-
-```text
-microdados_ed_basica_2024.csv
-```
-
-O arquivo original deve ser colocado no seguinte caminho:
-
-```text
-dados/
-└── Censo_escolar/
-    └── 2024/
-        └── microdados_censo_escolar_2024_defeso/
-            └── dados/
-                └── microdados_ed_basica_2024.csv
-```
-
-> Os microdados não devem ser versionados no GitHub. O arquivo deve ser obtido diretamente da fonte oficial e colocado localmente na estrutura indicada acima.
-
-## Requisitos
-
-* Python 3.x
-* pandas
-* openpyxl
-
-Para instalar as dependências:
-
-```bash
-pip install pandas openpyxl
-```
-
-## Execução
-
-Na raiz do projeto, execute:
-
-```bash
-python tratamento_Censo_2024.py
-```
-
-O script irá:
-
-1. carregar os microdados do Censo Escolar 2024;
-2. filtrar as escolas do Espírito Santo;
-3. filtrar o município de Divino de São Lourenço;
-4. selecionar escolas estaduais e municipais;
-5. selecionar as variáveis de interesse;
-6. gerar um arquivo Excel com os dados tratados.
-
-## Filtros aplicados
-
-### Unidade da Federação
-
-São mantidos apenas registros do:
-
-```text
-Espírito Santo
-```
-
-### Município
-
-Durante a fase atual de testes, são mantidos apenas registros de:
-
-```text
-Divino de São Lourenço
-```
-
-Esse filtro deverá ser posteriormente parametrizado para permitir a seleção de diferentes municípios.
-
-### Dependência administrativa
-
-São mantidas apenas escolas:
-
-| Código | Dependência |
-| -----: | ----------- |
-|      2 | Estadual    |
-|      3 | Municipal   |
-
-As categorias disponíveis no Censo são:
-
-| Código | Dependência |
-| -----: | ----------- |
-|      1 | Federal     |
-|      2 | Estadual    |
-|      3 | Municipal   |
-|      4 | Privada     |
-
-## Variáveis selecionadas
-
-O arquivo final contém atualmente as seguintes variáveis:
-
-| Variável                      | Descrição                             |
-| ----------------------------- | ------------------------------------- |
-| `NO_MUNICIPIO`                | Nome do município                     |
-| `NO_ENTIDADE`                 | Nome da escola                        |
-| `CO_ENTIDADE`                 | Código da escola                      |
-| `TP_DEPENDENCIA`              | Dependência administrativa            |
-| `TP_LOCALIZACAO`              | Localização da escola                 |
-| `TP_LOCALIZACAO_DIFERENCIADA` | Localização diferenciada              |
-| `TP_AEE`                      | Atendimento Educacional Especializado |
-| `IN_EJA_FUND`                 | Oferta de EJA – Ensino Fundamental    |
-| `IN_EJA_MED`                  | Oferta de EJA – Ensino Médio          |
-
-## Arquivo de saída
-
-Após a execução, será gerado:
-
-```text
-CensoEscolarMicrodados2024.xlsx
-```
-
-O arquivo contém apenas os registros e variáveis selecionados pelo tratamento.
+1. Leitura dos microdados oficiais do Censo Escolar.
+2. Filtragem dos dados de acordo com os critérios definidos.
+3. Seleção e organização das variáveis necessárias.
+4. Geração dos arquivos tratados.
+5. Utilização dos arquivos tratados na carga do Painel de Controle - Educação do TCE-ES.
 
 ## Estrutura do projeto
 
@@ -135,26 +22,84 @@ O arquivo contém apenas os registros e variáveis selecionados pelo tratamento.
 .
 ├── dados/
 │   └── Censo_escolar/
-│       └── 2024/
-│           └── ...
+│       ├── 2024/
+│       └── 2025/
 │
-├── tratamento_Censo_2024.py
-├── CensoEscolarMicrodados2024.xlsx
+├── tratamento/
+│   ├── tratamento_Censo_2024.py
+│   └── tratamento_Censo_2025.py
+│
+├── .gitignore
 └── README.md
 ```
 
-## Próximos passos
+Os microdados originais do Censo Escolar não devem, preferencialmente, ser versionados no GitHub. O `README` poderá informar posteriormente a fonte e as instruções para obtenção desses arquivos.
 
-O projeto ainda está em desenvolvimento. Entre as próximas etapas previstas estão:
+## Censo Escolar 2024
 
-* parametrizar o município;
-* permitir o processamento de vários municípios;
-* ampliar o conjunto de variáveis selecionadas;
-* criar tratamentos e recodificações das variáveis;
-* gerar arquivos padronizados para utilização em análises;
-* automatizar o processamento dos microdados;
-* avaliar a possibilidade de processamento de outros anos do Censo Escolar.
+O tratamento dos dados de 2024 contempla, inicialmente:
 
-## Observação
+* seleção do estado do Espírito Santo;
+* seleção de município para testes;
+* seleção das escolas estaduais e municipais;
+* seleção das variáveis necessárias ao Painel de Controle;
+* geração de arquivo Excel com os dados tratados.
 
-Os microdados utilizados neste projeto são disponibilizados pelo INEP. Este repositório contém o código de tratamento e organização dos dados, não sendo necessário versionar os arquivos brutos do Censo Escolar.
+O município utilizado atualmente na fase de testes é **Divino de São Lourenço/ES**.
+
+### Variáveis selecionadas atualmente
+
+* `NO_MUNICIPIO` — Município
+* `NO_ENTIDADE` — Nome da escola
+* `CO_ENTIDADE` — Código da escola
+* `TP_DEPENDENCIA` — Dependência administrativa
+* `TP_LOCALIZACAO` — Localização
+* `TP_LOCALIZACAO_DIFERENCIADA` — Localização diferenciada
+* `TP_AEE` — Atendimento Educacional Especializado
+* `IN_EJA_FUND` — Oferta de EJA - Ensino Fundamental
+* `IN_EJA_MED` — Oferta de EJA - Ensino Médio
+
+Essa seleção poderá ser ampliada ou alterada conforme as necessidades do Painel de Controle.
+
+## Censo Escolar 2025
+
+O tratamento dos microdados de 2025 será incorporado posteriormente, seguindo a mesma lógica geral do processamento de 2024, com as adaptações necessárias em função das alterações nas variáveis e na estrutura dos microdados entre as diferentes edições do Censo Escolar.
+
+## Saída
+
+Os scripts de tratamento gerarão arquivos estruturados, inicialmente em formato `.xlsx`, que posteriormente serão utilizados como fonte para a carga dos dados no **Painel de Controle - Educação do TCE-ES**.
+
+## Requisitos
+
+O projeto utiliza Python e, inicialmente, as seguintes bibliotecas:
+
+```text
+pandas
+openpyxl
+```
+
+A instalação das dependências pode ser realizada com:
+
+```bash
+pip install pandas openpyxl
+```
+
+## Execução
+
+Para executar o tratamento de 2024:
+
+```bash
+python tratamento/tratamento_Censo_2024.py
+```
+
+O arquivo resultante será gerado no diretório definido no script.
+
+## Fonte dos dados
+
+Os microdados utilizados neste projeto são os **Microdados do Censo Escolar da Educação Básica**, disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP).
+
+## Observações
+
+A estrutura dos microdados do Censo Escolar pode sofrer alterações entre diferentes anos. Dessa forma, os scripts de tratamento devem considerar as diferenças de variáveis e estrutura existentes entre as edições de 2024 e 2025.
+
+O projeto está em desenvolvimento e a estrutura de processamento poderá ser reorganizada conforme a evolução das necessidades de carga e manutenção do **Painel de Controle - Educação do TCE-ES**.
