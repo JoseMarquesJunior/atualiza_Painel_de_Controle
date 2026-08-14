@@ -2,104 +2,41 @@
 
 ## Objetivo
 
-Este repositório tem como objetivo realizar a **leitura e o tratamento dos microdados do Censo Escolar**, inicialmente referentes aos anos de **2024 e 2025**.
+Este repositório tem como objetivo realizar a leitura, seleção, transformação e padronização dos microdados do **Censo Escolar da Educação Básica**, disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP).
 
-Após o tratamento, os dados serão utilizados para gerar arquivos estruturados que servirão de entrada para a **carga do Painel de Controle - Educação do TCE-ES**.
+Os dados tratados serão utilizados posteriormente na geração de arquivos destinados à carga do **Painel de Controle - Educação do Tribunal de Contas do Estado do Espírito Santo (TCE-ES)**.
 
-## Fluxo
+O projeto inicialmente contempla os dados dos anos de **2024 e 2025**, podendo ser posteriormente ampliado para outros anos.
 
-O processo previsto para o projeto é:
+---
 
-1. Leitura dos microdados oficiais do Censo Escolar.
-2. Filtragem dos dados de acordo com os critérios definidos.
-3. Seleção e organização das variáveis necessárias.
-4. Geração dos arquivos tratados.
-5. Utilização dos arquivos tratados na carga do Painel de Controle - Educação do TCE-ES.
+## Fluxo de tratamento
 
-## Estrutura do projeto
+O processamento dos dados segue as seguintes etapas:
 
-```text
-.
-├── dados/
-│   └── Censo_escolar/
-│       ├── 2024/
-│       └── 2025/
-│
-├── tratamento/
-│   ├── tratamento_Censo_2024.py
-│   └── tratamento_Censo_2025.py
-│
-├── .gitignore
-└── README.md
-```
+1. Leitura dos microdados do Censo Escolar;
+2. Seleção do estado do Espírito Santo;
+3. Seleção das dependências administrativas estadual e municipal;
+4. Seleção apenas das escolas em funcionamento;
+5. Seleção das variáveis de interesse;
+6. Transformação dos dados para o formato analítico por etapa de ensino;
+7. Inclusão das informações de matrículas em tempo integral;
+8. Inclusão do ano de referência;
+9. Padronização dos nomes das colunas;
+10. Exportação dos dados tratados para arquivo Excel.
 
-Os microdados originais do Censo Escolar não devem, preferencialmente, ser versionados no GitHub. O `README` poderá informar posteriormente a fonte e as instruções para obtenção desses arquivos.
-
-## Censo Escolar 2024
-
-O tratamento dos dados de 2024 contempla, inicialmente:
-
-* seleção do estado do Espírito Santo;
-* seleção de município para testes;
-* seleção das escolas estaduais e municipais;
-* seleção das variáveis necessárias ao Painel de Controle;
-* geração de arquivo Excel com os dados tratados.
-
-O município utilizado atualmente na fase de testes é **Divino de São Lourenço/ES**.
-
-### Variáveis selecionadas atualmente
-
-* `NO_MUNICIPIO` — Município
-* `NO_ENTIDADE` — Nome da escola
-* `CO_ENTIDADE` — Código da escola
-* `TP_DEPENDENCIA` — Dependência administrativa
-* `TP_LOCALIZACAO` — Localização
-* `TP_LOCALIZACAO_DIFERENCIADA` — Localização diferenciada
-* `TP_AEE` — Atendimento Educacional Especializado
-* `IN_EJA_FUND` — Oferta de EJA - Ensino Fundamental
-* `IN_EJA_MED` — Oferta de EJA - Ensino Médio
-
-Essa seleção poderá ser ampliada ou alterada conforme as necessidades do Painel de Controle.
-
-## Censo Escolar 2025
-
-O tratamento dos microdados de 2025 será incorporado posteriormente, seguindo a mesma lógica geral do processamento de 2024, com as adaptações necessárias em função das alterações nas variáveis e na estrutura dos microdados entre as diferentes edições do Censo Escolar.
-
-## Saída
-
-Os scripts de tratamento gerarão arquivos estruturados, inicialmente em formato `.xlsx`, que posteriormente serão utilizados como fonte para a carga dos dados no **Painel de Controle - Educação do TCE-ES**.
-
-## Requisitos
-
-O projeto utiliza Python e, inicialmente, as seguintes bibliotecas:
-
-```text
-pandas
-openpyxl
-```
-
-A instalação das dependências pode ser realizada com:
-
-```bash
-pip install pandas openpyxl
-```
-
-## Execução
-
-Para executar o tratamento de 2024:
-
-```bash
-python tratamento/tratamento_Censo_2024.py
-```
-
-O arquivo resultante será gerado no diretório definido no script.
+---
 
 ## Fonte dos dados
 
-Os microdados utilizados neste projeto são os **Microdados do Censo Escolar da Educação Básica**, disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP).
+Os dados utilizados são os **Microdados do Censo Escolar da Educação Básica**, disponibilizados pelo INEP.
 
-## Observações
+Os arquivos brutos não são alterados. O código realiza o processamento diretamente sobre os arquivos armazenados no diretório de dados.
 
-A estrutura dos microdados do Censo Escolar pode sofrer alterações entre diferentes anos. Dessa forma, os scripts de tratamento devem considerar as diferenças de variáveis e estrutura existentes entre as edições de 2024 e 2025.
+Para o Censo Escolar 2024, é utilizado o arquivo:
 
-O projeto está em desenvolvimento e a estrutura de processamento poderá ser reorganizada conforme a evolução das necessidades de carga e manutenção do **Painel de Controle - Educação do TCE-ES**.
+```text
+dados/Censo_escolar/2024/
+└── microdados_censo_escolar_2024_defeso/
+    └── dados/
+        └── microdados_ed_basica_2024.csv
