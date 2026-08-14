@@ -25,8 +25,6 @@ df_censo = df_censo[df_censo["TP_DEPENDENCIA"].isin([2, 3])]
 colunas = [
     "NO_MUNICIPIO", "NO_ENTIDADE", "CO_ENTIDADE", "TP_DEPENDENCIA", "TP_LOCALIZACAO", 
     "TP_LOCALIZACAO_DIFERENCIADA", "TP_AEE", "IN_EJA_FUND", "IN_EJA_MED", 
-    "IN_INF", "IN_INF_CRE", "IN_INF_PRE", "IN_FUND", "IN_FUND_AI", "IN_FUND_AF",
-    "IN_MED", "IN_ESP"
     ]
 df_censo = df_censo[colunas].copy()
 
