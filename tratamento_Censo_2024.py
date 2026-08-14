@@ -164,6 +164,50 @@ def renomear_colunas(df):
 
     return df.rename(columns=nomes_colunas)
 
+def mapear_valores(df):
+    """
+    Converte códigos numéricos das variáveis categóricas
+    para suas respectivas descrições.
+    """
+
+    # Dependência administrativa
+    mapa_dependencia = {
+        1: "Federal",
+        2: "Estadual",
+        3: "Municipal",
+        4: "Privada",
+    }
+
+    mapa_localizacao = {
+        1: "Urbana",    
+        2: "Rural",
+    }
+
+    # Localização diferenciada
+    mapa_localizacao_diferenciada = {
+        1: "Assentamento",
+        2: "Terra indígena",
+        3: "Comunidade quilombola",
+        8: "Comunidades tradicionais",
+    }
+
+    # Atendimento Educacional Especializado
+    mapa_aee = {
+        0: "Não",
+        1: "Não",
+        2: "Sim",
+    }
+
+    df["TP_DEPENDENCIA"] = df["TP_DEPENDENCIA"].map(mapa_dependencia)
+
+    df["TP_LOCALIZACAO"] = df["TP_LOCALIZACAO"].map(mapa_localizacao)
+
+    df["TP_LOCALIZACAO_DIFERENCIADA"] = df["TP_LOCALIZACAO_DIFERENCIADA"].map(mapa_localizacao_diferenciada)
+
+    df["TP_AEE"] = df["TP_AEE"].map(mapa_aee)
+
+    return df
+
 CAMINHO_ARQUIVO = "dados/Censo_escolar/2024/microdados_censo_escolar_2024_defeso/dados/microdados_ed_basica_2024.csv"
 NOME_NOVO_ARQUIVO = "CensoEscolarMicrodados2024.xlsx"
 
@@ -190,6 +234,7 @@ df_censo = df_censo[df_censo["TP_SITUACAO_FUNCIONAMENTO"] == 1]
 df_censo = selecionar_colunas(df_censo)
 df_censo = transformar_por_etapa(df_censo)
 df_censo = formatar_dataframe(df_censo)
+df_censo = mapear_valores(df_censo)
 df_censo = renomear_colunas(df_censo)
 
 # Salvando arquivo tratado em Excel
