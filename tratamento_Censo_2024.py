@@ -194,7 +194,7 @@ def mapear_valores(df):
     # Atendimento Educacional Especializado
     mapa_aee = {
         0: "Não",
-        1: "Não",
+        1: "Sim",
         2: "Sim",
     }
 
