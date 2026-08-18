@@ -4,7 +4,7 @@ def selecionar_colunas(df):
 
     df = df.copy()
     df["Ano"] = 2025
-    
+
     colunas = [
         "Ano",
         "NO_MUNICIPIO",
@@ -68,14 +68,24 @@ def renomear_colunas(df, etapa):
                 "IDEB_EnsinoMedio",
         }
     }
+    print(df.columns)
 
     if etapa not in nomes_colunas:
         raise ValueError(
             f"Etapa inválida: '{etapa}'. "
             "Use 'AI', 'AF' ou 'EM'."
         )
+    df = df.rename(columns=nomes_colunas[etapa])
 
-    return df.rename(columns=nomes_colunas[etapa])
+    df = df.rename(columns={
+        "NO_MUNICIPIO": "Municipio",
+        "NO_ESCOLA": "Escola",
+        "ID_ESCOLA": "CodigoINEP",
+        "REDE": "DependenciaAdministrativa"
+    })
+    print(df.columns)
+    
+    return df
 
 def realizar_filtragem(df):
     """
@@ -110,6 +120,34 @@ def concatenar_ideb(ideb_AI, ideb_AF, ideb_EM):
 
     return df_ideb
 
+def ordenar_colunas(df):
+    """
+    Reordena as colunas do DataFrame para a estrutura
+    utilizada no banco analítico do Painel de Controle - Educação.
+    """
+
+    colunas = [
+        "Ano",
+        "Municipio",
+        "CodigoINEP",
+        "Escola",
+        "DependenciaAdministrativa",
+
+        "NotaSAEB_Matematica_EnsinoFundamental_AnosIniciais",
+        "NotaSAEB_Matematica_EnsinoFundamental_AnosFinais",
+        "NotaSAEB_Matematica_EnsinoMedio",
+
+        "NotaSAEB_LinguaPortuguesa_EnsinoFundamental_AnosIniciais",
+        "NotaSAEB_LinguaPortuguesa_EnsinoFundamental_AnosFinais",
+        "NotaSAEB_LinguaPortuguesa_EnsinoMedio",
+
+        "IDEB_EnsinoFundamental_AnosIniciais",
+        "IDEB_EnsinoFundamental_AnosFinais",
+        "IDEB_EnsinoMedio",
+    ]
+
+    return df[colunas].copy()
+
 CAMINHO_ARQUIVO_AI = "dados/IDEB/2025/divulgacao_anos_iniciais_escolas_2025/divulgacao_anos_iniciais_escolas_2025/divulgacao_anos_iniciais_escolas_2025.xlsx"
 CAMINHO_ARQUIVO_AF = "dados/IDEB/2025/divulgacao_anos_finais_escolas_2025/divulgacao_anos_finais_escolas_2025/divulgacao_anos_finais_escolas_2025.xlsx"
 CAMINHO_ARQUIVO_EM = "dados/IDEB/2025/divulgacao_ensino_medio_escolas_2025/divulgacao_ensino_medio_escolas_2025/divulgacao_ensino_medio_escolas_2025.xlsx"
@@ -138,6 +176,7 @@ ideb_EM = selecionar_colunas(ideb_EM)
 ideb_EM = renomear_colunas(ideb_EM, "EM")
 
 df_ideb = concatenar_ideb(ideb_AI, ideb_AF, ideb_EM)
+df_ideb = ordenar_colunas(df_ideb)
 
 # Salvando arquivo tratado em Excel
 df_ideb.to_excel(NOME_NOVO_ARQUIVO, index=False)
