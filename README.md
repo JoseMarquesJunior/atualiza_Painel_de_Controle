@@ -1,42 +1,48 @@
-# Tratamento dos Microdados do Censo Escolar
+# Atualiza Painel de Controle — Documentação do Projeto
 
-## Objetivo
+Resumo
+- Scripts para limpeza e preparação dos microdados do Censo Escolar (2024/2025) e arquivos IDEB, gerando arquivos analíticos para o Painel de Controle.
 
-Este repositório tem como objetivo realizar a leitura, seleção, transformação e padronização dos microdados do **Censo Escolar da Educação Básica**, disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP).
+Arquivos principais
+- `tratamento_Censo_2024.py` — leitura e verificação do CSV do Censo 2024.
+- `tratamento_Censo_2025.py` — pipeline que junta Tabela_Escola, Tabela_Docente e Tabela_Matricula e produz o arquivo analítico por etapa.
+- `tratamento_IDEB_Escola.py` — função utilitária de leitura e pré-processamento de planilhas IDEB (.xlsx).
 
-Os dados tratados serão utilizados posteriormente na geração de arquivos destinados à carga do **Painel de Controle - Educação do Tribunal de Contas do Estado do Espírito Santo (TCE-ES)**.
+Estrutura de dados
+- Dados brutos: `dados/` (subpastas por ano e tipo). Exemplo:
+  - `dados/Censo_escolar/2025/microdados_censo_escolar_2025/dados/Tabela_Escola_2025.csv`
+  - `dados/IDEB/2025/.../divulgacao_anos_finais_escolas_2025.xlsx`
 
-O projeto inicialmente contempla os dados dos anos de **2024 e 2025**, podendo ser posteriormente ampliado para outros anos.
+Dependências e instalação
+- Recomendado Python 3.10+.
+- Instalação mínima:
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install --upgrade pip
+pip install pandas openpyxl pyarrow
+```
 
----
+Como rodar
+- Executar qualquer script diretamente:
+```powershell
+python .\tratamento_Censo_2025.py
+python .\tratamento_Censo_2024.py
+python .\tratamento_IDEB_Escola.py
+```
 
-## Fluxo de tratamento
+Notas sobre encoding
+- Se aparecer `UnicodeDecodeError`, tente ler com `encoding='latin-1'` ou `encoding='cp1252'`.
+- Recomenda-se adicionar uma função utilitária para tentar múltiplos encodings automaticamente.
 
-O processamento dos dados segue as seguintes etapas:
+Boas práticas sugeridas
+- Encapsular leituras em funções reutilizáveis (ver `tratamento_IDEB_Escola.py`).
+- Usar `logging` em vez de `print` para pipelines.
+- Converter CSV limpos para `parquet` para acesso mais rápido.
+- Validar colunas e tipos após a leitura.
 
-1. Leitura dos microdados do Censo Escolar;
-2. Seleção do estado do Espírito Santo;
-3. Seleção das dependências administrativas estadual e municipal;
-4. Seleção apenas das escolas em funcionamento;
-5. Seleção das variáveis de interesse;
-6. Transformação dos dados para o formato analítico por etapa de ensino;
-7. Inclusão das informações de matrículas em tempo integral;
-8. Inclusão do ano de referência;
-9. Padronização dos nomes das colunas;
-10. Exportação dos dados tratados para arquivo Excel.
+Próximos passos que posso aplicar
+- Adicionar função utilitária de leitura robusta para CSV/Excel.
+- Padronizar scripts com `if __name__ == '__main__'` e `logging`.
 
----
-
-## Fonte dos dados
-
-Os dados utilizados são os **Microdados do Censo Escolar da Educação Básica**, disponibilizados pelo INEP.
-
-Os arquivos brutos não são alterados. O código realiza o processamento diretamente sobre os arquivos armazenados no diretório de dados.
-
-Para o Censo Escolar 2024, é utilizado o arquivo:
-
-```text
-dados/Censo_escolar/2024/
-└── microdados_censo_escolar_2024_defeso/
-    └── dados/
-        └── microdados_ed_basica_2024.csv
+Se preferir, posso substituir o `README.md` existente com este conteúdo ou mesclá-lo.
