@@ -160,7 +160,7 @@ ideb_AI = pd.read_excel(CAMINHO_ARQUIVO_AI, skiprows=9)
 ideb_AF = pd.read_excel(CAMINHO_ARQUIVO_AF, skiprows=9)
 ideb_EM = pd.read_excel(CAMINHO_ARQUIVO_EM, skiprows=9)
 
-print("Dados do IDEBcarregados com sucesso!")
+print("Dados do IDEB carregados com sucesso!")
 
 
 ideb_AI = realizar_filtragem(ideb_AI)
