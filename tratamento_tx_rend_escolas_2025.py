@@ -110,11 +110,11 @@ def ordenar_colunas(df):
 
     return df[colunas].copy()
 
-CAMINHO_ARQUIVO = "dados/Taxa de Rendimento/tx_rend_escolas_2024/tx_rend_escolas_2024.xlsx"
+CAMINHO_ARQUIVO = "dados/Taxa de Rendimento/tx_rend_escolas_2025/tx_rend_escolas_2025.xlsx"
 
-NOME_NOVO_ARQUIVO = 'TaxaRendimento_Escola2024.xlsx'
+NOME_NOVO_ARQUIVO = 'TaxaRendimento_Escola2025.xlsx'
 
-print("Iniciando o tratamento da Taxa de Rendimento Escolar 2024...")
+print("Iniciando o tratamento da Taxa de Rendimento Escolar 2025...")
 
 df_tx_rend = pd.read_excel(CAMINHO_ARQUIVO, sheet_name="ESCOLAS", skiprows=8)
 
