@@ -148,6 +148,62 @@ def ordenar_colunas(df):
 
     return df[colunas].copy()
 
+def tratar_valores_ausentes(df):
+    """
+    Converte os marcadores do INEP em valores nulos e deixa as colunas
+    de indicadores numéricas:
+        '-'    : sem resultado para a rede
+        'ND'   : resultado não divulgado
+        'ND***': resultado não divulgado (com nota de rodapé do INEP)
+
+    Qualquer outro marcador de texto não mapeado faz o pd.to_numeric
+    falhar, evitando que um símbolo desconhecido passe despercebido.
+    """
+
+    df = df.copy()
+
+    colunas_indicadores = [
+        coluna for coluna in df.columns
+        if coluna.startswith(("NotaSAEB_", "IDEB_"))
+    ]
+
+    df[colunas_indicadores] = (
+        df[colunas_indicadores]
+        .replace(r"^-$|^ND\**$", pd.NA, regex=True)
+        .apply(pd.to_numeric)
+    )
+
+    return df
+
+def consolidar_por_escola(df):
+    """
+    Consolida os registros por escola, juntando os indicadores das
+    diferentes etapas (Anos Iniciais, Anos Finais e Ensino Médio) em
+    uma única linha por escola.
+
+    Sem essa consolidação, cada escola aparece em até três linhas
+    (uma por etapa), cada uma com apenas um grupo de colunas
+    preenchido e o restante vazio.
+    """
+
+    colunas_grupo = [
+        "Ano",
+        "Municipio",
+        "CodigoINEP",
+        "Escola",
+        "DependenciaAdministrativa",
+    ]
+
+    df = df.copy()
+
+    # Consolida os indicadores, mantendo o primeiro valor não nulo
+    df = (
+        df.groupby(colunas_grupo, as_index=False, sort=False)
+        .first()
+    )
+
+    return df
+
 CAMINHO_ARQUIVO_AI = "dados/IDEB/2025/divulgacao_anos_iniciais_escolas_2025/divulgacao_anos_iniciais_escolas_2025/divulgacao_anos_iniciais_escolas_2025.xlsx"
 CAMINHO_ARQUIVO_AF = "dados/IDEB/2025/divulgacao_anos_finais_escolas_2025/divulgacao_anos_finais_escolas_2025/divulgacao_anos_finais_escolas_2025.xlsx"
 CAMINHO_ARQUIVO_EM = "dados/IDEB/2025/divulgacao_ensino_medio_escolas_2025/divulgacao_ensino_medio_escolas_2025/divulgacao_ensino_medio_escolas_2025.xlsx"
@@ -177,6 +233,9 @@ ideb_EM = renomear_colunas(ideb_EM, "EM")
 
 df_ideb = concatenar_ideb(ideb_AI, ideb_AF, ideb_EM)
 df_ideb = ordenar_colunas(df_ideb)
+df_ideb = tratar_valores_ausentes(df_ideb)
+df_ideb = consolidar_por_escola(df_ideb)
+df_ideb = df_ideb.sort_values("Municipio")
 
 # Salvando arquivo tratado em Excel
 df_ideb.to_excel(NOME_NOVO_ARQUIVO, index=False)

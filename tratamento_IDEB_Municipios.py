@@ -145,6 +145,33 @@ def ordenar_colunas(df):
 
     return df[colunas].copy()
 
+def tratar_valores_ausentes(df):
+    """
+    Converte os marcadores do INEP em valores nulos e deixa as colunas
+    de indicadores numéricas:
+        '-'  : sem resultado para a rede
+        'ND' : resultado não divulgado
+
+    Mantidos como texto, esses marcadores levavam a limpezas manuais
+    com localizar/substituir de 'ND', que também apagavam o 'nd' dos
+    nomes dos municípios (ex.: 'Baixo Guandu' -> 'Baixo Guau').
+    """
+
+    df = df.copy()
+
+    colunas_indicadores = [
+        coluna for coluna in df.columns
+        if coluna.startswith(("NotaSAEB_", "IDEB_"))
+    ]
+
+    df[colunas_indicadores] = (
+        df[colunas_indicadores]
+        .replace(["-", "ND"], pd.NA)
+        .apply(pd.to_numeric)
+    )
+
+    return df
+
 def consolidar_por_municipio(df):
     """
     Consolida os registros por município e dependência administrativa,
@@ -199,6 +226,7 @@ ideb_EM = renomear_colunas(ideb_EM, "EM")
 
 df_ideb = concatenar_ideb(ideb_AI, ideb_AF, ideb_EM)
 df_ideb = ordenar_colunas(df_ideb)
+df_ideb = tratar_valores_ausentes(df_ideb)
 df_ideb = consolidar_por_municipio(df_ideb)
 df_ideb = df_ideb.sort_values("Municipio")
 
