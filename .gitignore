@@ -1,6 +1,7 @@
 # Dados
 dados/
 *.csv
+!hash_arquivos.csv
 *.zip
 *.rar
 *.7z

@@ -14,7 +14,9 @@ Scripts em Python (pandas) para tratar microdados públicos de educação (INEP)
 | `tratamento_tx_rend_escolas_2025.py` | `Taxa de Rendimento/tx_rend_escolas_2025/tx_rend_escolas_2025.xlsx` | `TaxaRendimento_Escola2025.xlsx` |
 | `tratamento_tx_rend_municipios_2024.py` | `Taxa de Rendimento/tx_rend_municipios_2024/tx_rend_municipios_2024.xlsx` | `TaxaRendimento_Municipios2024.xlsx` |
 | `tratamento_tx_rend_municipios_2025.py` | `Taxa de Rendimento/tx_rend_municipios_2025/tx_rend_municipios_2025.xlsx` | `TaxaRendimento_Municipios2025.xlsx` |
+| `tratamento_fluencia_2025.py` | `Fluência/2025/1º ed. 2025 - Rede estadual e Redes Municipais de Ensino.xlsx` | `Fluencia2025.xlsx` |
 | `tratamento_PAEBES.py` | `paebes_2015_2024_2025/Paebes/2024/resultados_Prg_1931_Paebes_2024_250428.xlsx` | `PAEBES 2024.xlsx` |
+| `tratamento_PAEBES_alfa.py` | `paebes/paebes{2024,2025}/paebes_alfa/resultados_Prg_...xlsx` | `PAEBES_ALFA_2024_2025.xlsx` |
 
 ## Estrutura de dados
 
@@ -38,6 +40,13 @@ Os arquivos `.xlsx` de IDEB e Taxa de Rendimento vêm do INEP com linhas de cabe
 - **Nomenclatura de colunas** no arquivo final: `Ano`, `Municipio`, `CodigoINEP`/`CodigoDoMunicipio`, `Escola` (quando por escola), `Localizacao`, `DependenciaAdministrativa`, seguidas dos indicadores nomeados por etapa de ensino (`EnsinoFundamental_AnosIniciais`, `EnsinoFundamental_AnosFinais`, `EnsinoFundamental_Total`, `EnsinoMedio_Total`).
 - **IDEB por escola**: como os três arquivos fonte (AI/AF/EM) não têm exatamente as mesmas escolas, o script concatena as três bases (uma linha por escola+etapa) em vez de fazer merge.
 - **IDEB por município**: já concatenado por etapa e depois consolidado (`consolidar_por_municipio`) em uma única linha por município+dependência.
+
+## Rastreabilidade dos arquivos enviados
+
+`gerar_hash_arquivos.py` calcula o hash SHA-256 de cada `.xlsx` gerado na raiz do projeto (os arquivos que alimentam o Painel de Controle) e registra o resultado em `hash_arquivos.csv`.
+
+- O registro é append-only: uma linha nova só é gravada quando o hash do arquivo muda em relação ao último registro dele, então o histórico mostra apenas os envios que de fato alteraram o conteúdo.
+- Rodar depois de gerar/atualizar os arquivos, antes de enviá-los ao Painel de Controle, para manter o histórico de qual versão de cada arquivo foi enviada e quando.
 
 ## Dependências e instalação
 
@@ -64,6 +73,9 @@ python .\tratamento_tx_rend_escolas_2025.py
 python .\tratamento_tx_rend_municipios_2024.py
 python .\tratamento_tx_rend_municipios_2025.py
 python .\tratamento_PAEBES.py
+python .\tratamento_PAEBES_alfa.py
+python .\tratamento_fluencia_2025.py
+python .\gerar_hash_arquivos.py
 ```
 
 > Se um arquivo `.xlsx` de origem estiver aberto no Excel/LibreOffice (arquivo `.~lock.*`), feche-o antes de rodar o script correspondente.
