@@ -1,5 +1,6 @@
 import csv
 import hashlib
+import zipfile
 from datetime import datetime
 from pathlib import Path
 
@@ -16,6 +17,7 @@ from pathlib import Path
 
 PASTA_RAIZ = Path(__file__).parent
 ARQUIVO_REGISTRO = PASTA_RAIZ / "hash_arquivos.csv"
+ARQUIVO_ZIP_ENVIO = PASTA_RAIZ / "arquivos_para_envio.zip"
 COLUNAS_REGISTRO = ["Arquivo", "HashSHA256", "TamanhoBytes", "DataHora"]
 
 
@@ -64,6 +66,20 @@ def registrar_novas_linhas(novas_linhas):
         escritor.writerows(novas_linhas)
 
 
+def gerar_zip_para_envio(arquivos):
+    """
+    Empacota os .xlsx atuais junto com o registro de hashes num único .zip,
+    pronto para anexar no e-mail de envio à TI. O .zip é sempre recriado do
+    zero, refletindo o estado atual dos arquivos.
+    """
+
+    with zipfile.ZipFile(ARQUIVO_ZIP_ENVIO, "w", zipfile.ZIP_DEFLATED) as zip_arquivo:
+        for arquivo in arquivos:
+            zip_arquivo.write(arquivo, arcname=arquivo.name)
+        if ARQUIVO_REGISTRO.exists():
+            zip_arquivo.write(ARQUIVO_REGISTRO, arcname=ARQUIVO_REGISTRO.name)
+
+
 print("Verificando hash dos arquivos .xlsx da raiz do projeto...\n")
 
 arquivos = listar_arquivos_xlsx()
@@ -103,3 +119,6 @@ if novas_linhas:
     )
 else:
     print("\nNenhum arquivo mudou desde o último registro.")
+
+gerar_zip_para_envio(arquivos)
+print(f"'{ARQUIVO_ZIP_ENVIO.name}' gerado com {len(arquivos)} arquivo(s) para envio.")
